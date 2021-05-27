@@ -1,0 +1,82 @@
+.list-section {
+  display: grid;
+  grid-template-rows: auto;
+  justify-items: center;
+  gap: 4px;
+  overflow: scroll;
+}
+.list-section li {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+  border: 2px solid black;
+  align-items: center;
+  padding: 5px;
+  background-color: cornsilk;
+}
+
+.action-section section {
+  display: grid;
+  margin: 0px 200px 0px 200px;
+  gap: 10px;
+}
+.nameH {
+  padding: 10px;
+  background-color: rgb(247, 246, 244);
+  display: grid;
+  grid-template-columns: 50%50%;
+}
+
+form {
+  background-color: rgb(247, 246, 244);
+  display: grid;
+  padding: 20px;
+  gap: 10px;
+}
+form label {
+  display: grid;
+}
+
+form div label {
+  grid-template-columns: 10% 90%;
+}
+.titelH {
+  display: grid;
+  justify-items: center;
+}
+.greensmall {
+  background-color: darkturquoise;
+  color: aliceblue;
+}
+
+.greenbig {
+  background-color: rgb(21, 81, 82);
+  color: aliceblue;
+}
+.info-section {
+  display: grid;
+  padding: 100px 650px 100px 650px;
+}
+
+.viewcard {
+  border: 3px dashed gainsboro;
+  padding: 30px;
+}
+.viewH {
+  padding: 0px 0px 2px 0px;
+  border-bottom: 3px dashed gainsboro;
+}
+.viewP {
+  font-weight: bolder;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: 10px;
+}
+.viewP span {
+  font-weight: lighter;
+  text-align: right;
+}
+
+.autoFill {
+  text-align: right;
+}
