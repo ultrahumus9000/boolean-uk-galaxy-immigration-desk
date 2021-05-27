@@ -52,6 +52,7 @@ const state = {
   applicants: [],
   homeWorld: [],
   approvedApplicants: [],
+  rejectApplicants: [],
 };
 
 function getApplicantsinfo() {
@@ -66,40 +67,23 @@ function getApplicantsinfo() {
       return state.applicants;
     });
 }
-
+getApplicantsinfo().then(function () {
+  render();
+});
 const infoSection = document.querySelector(".info-section");
 const listSection = document.querySelector(".list-section");
 const actionSection = document.querySelector(".action-section");
-
-// {
-//     "name": "Luke Skywalker",
-//     "height": "172",
-//     "mass": "77",
-//     "hair_color": "blond",
-//     "skin_color": "fair",
-//     "eye_color": "blue",
-//     "birth_year": "19BBY",
-//     "gender": "male",
-//     "homeworld": "http://swapi.dev/api/planets/1/",
-//     "films": [
-//         "http://swapi.dev/api/films/1/",
-//         "http://swapi.dev/api/films/2/",
-//         "http://swapi.dev/api/films/3/",
-//         "http://swapi.dev/api/films/6/"
-//     ],
-//     "species": [],
-//     "vehicles": [
-//         "http://swapi.dev/api/vehicles/14/",
-//         "http://swapi.dev/api/vehicles/30/"
-//     ],
-//     "starships": [
-//         "http://swapi.dev/api/starships/12/",
-//         "http://swapi.dev/api/starships/22/"
-//     ],
-//     "created": "2014-12-09T13:50:51.644000Z",
-//     "edited": "2014-12-20T21:17:56.891000Z",
-//     "url": "http://swapi.dev/api/people/1/"
-// }
+let applicant = "";
+function render() {
+  let sectionList = document.querySelector(".list-section");
+  sectionList.innerHTML = "";
+  let h2el = document.createElement("h2");
+  h2el.innerText = "Applicants";
+  sectionList.prepend(h2el);
+  renderPendingApplicants();
+  renderApprovedApplicants();
+  renderRejectApplicants();
+}
 
 function fecthHome(applicant) {
   return fetch(applicant.homeworld)
@@ -120,18 +104,94 @@ function fecthHome(applicant) {
     });
 }
 
-function renderApplicants() {
-  getApplicantsinfo().then(function () {
-    console.log(state.applicants);
-    let applicants = state.applicants;
-    applicants.map(function (applicant) {
-      createListforAoolicant(applicant);
-    });
+function renderApprovedApplicants() {
+  let approvedApplicants = state.approvedApplicants;
+  approvedApplicants.map(function (approvedApplicant) {
+    createListforApprovedApplicant(approvedApplicant);
   });
 }
-renderApplicants();
 
-function createListforAoolicant(applicant) {
+function createListforApprovedApplicant(approvedApplicant) {
+  let listEl = document.createElement("li");
+  listEl.className = "approvedapplicantlist";
+
+  listEl.innerText = approvedApplicant.name;
+  let viewBtn = document.createElement("button");
+  viewBtn.innerText = "VIEW";
+
+  viewBtn.addEventListener("click", function () {
+    // console.log(approvedApplicant);
+    let viewaddress = state.homeWorld.find(function (home) {
+      //   console.log(home.url);
+      return home.url === approvedApplicant.homeworld;
+    });
+    // console.log(approvedApplicant.url);
+    viewaddress = viewaddress.name;
+    // console.log(viewaddress);
+    createViewcard(approvedApplicant, viewaddress);
+
+    let sectionEl = document.querySelector("immigration_section");
+    let formel = document.querySelector(".immigration_form");
+    formel.innerHTML = "";
+    let spantext = document.querySelector(".autoFill");
+    spantext.innerText = approvedApplicant.name;
+
+    let buttonBig = document.createElement("button");
+    buttonBig.className = "greenbig ";
+    buttonBig.innerText = "Accept";
+    formel.append(buttonBig);
+  });
+  listEl.append(viewBtn);
+  listSection.append(listEl);
+}
+
+function renderRejectApplicants() {
+  let rejectApplicants = state.rejectApplicants;
+  rejectApplicants.map(function (rejectApplicant) {
+    createListforRejectApplicant(rejectApplicant);
+  });
+}
+
+function createListforRejectApplicant(rejectApplicant) {
+  let listEl = document.createElement("li");
+  listEl.className = "rejectapplicantlist";
+  listEl.innerText = rejectApplicant.name;
+  let viewBtn = document.createElement("button");
+  viewBtn.innerText = "VIEW";
+
+  viewBtn.addEventListener("click", function () {
+    let viewaddress = state.homeWorld.find(function (home) {
+      //   console.log(home.url);
+      return home.url === rejectApplicant.homeworld;
+    });
+    // console.log(approvedApplicant.url);
+    viewaddress = viewaddress.name;
+    // console.log(viewaddress);
+    createViewcard(rejectApplicant, viewaddress);
+    let sectionEl = document.querySelector("immigration_section");
+    let formel = document.querySelector(".immigration_form");
+    formel.innerHTML = "";
+    let spantext = document.querySelector(".autoFill");
+    spantext.innerText = rejectApplicant.name;
+
+    let buttonBig = document.createElement("button");
+    buttonBig.className = "rejecbigbutton";
+    buttonBig.innerText = "REJECT!";
+    formel.append(buttonBig);
+  });
+  listEl.append(viewBtn);
+  listSection.append(listEl);
+}
+
+function renderPendingApplicants() {
+  console.log(state.applicants);
+  let applicants = state.applicants;
+  applicants.map(function (applicant) {
+    createListforPendingApplicant(applicant);
+  });
+}
+
+function createListforPendingApplicant(applicant) {
   let listEl = document.createElement("li");
   listEl.className = "applicantlist";
   listEl.innerText = applicant.name;
@@ -146,8 +206,12 @@ function createListforAoolicant(applicant) {
       viewaddress = viewaddress.name;
       console.log(viewaddress);
       createViewcard(applicant, viewaddress);
-      let nameInfo = document.querySelector(".autoFill");
-      nameInfo.innerText = applicant.name;
+
+      console.log(applicant);
+
+      let formSection = document.querySelector(".action-section");
+      formSection.innerHTML = "";
+      createImigrationForm(applicant);
       let prebtn = document.querySelector(".prebtn");
       prebtn.classList.add("greensmall");
     });
@@ -204,8 +268,10 @@ function createViewcard(applicant, viewaddress) {
   infoSection.append(viewCard);
 }
 
-function createImigrationForm() {
+function createImigrationForm(applicant) {
   let sectionEl = document.createElement("section");
+  sectionEl.className = "immigration_section";
+
   let titelH = document.createElement("h2");
   titelH.className = "titelH";
   titelH.innerText = "Immigration Form";
@@ -216,24 +282,38 @@ function createImigrationForm() {
 
   let spanName = document.createElement("span");
   spanName.className = "autoFill";
-  spanName.innerText = "";
+  let defaultName = "";
+  if (applicant === "") {
+    defaultName = "";
+  } else {
+    defaultName = applicant.name;
+  }
+
+  spanName.innerText = defaultName;
   nameH.append(spanName);
 
   let formEl = document.createElement("form");
+  formEl.className = "immigration_form";
 
   let destinationLabel = document.createElement("label");
   destinationLabel.innerText = "Destination";
   let destinationInput = document.createElement("input");
+  destinationInput.setAttribute("name", "destination");
   destinationLabel.append(destinationInput);
 
   let purposeLabel = document.createElement("label");
   purposeLabel.innerText = "Purpose of Travel";
 
   let purposeSelect = document.createElement("select");
+  purposeSelect.setAttribute("name", "purpose");
+
   let purposeOptionOne = document.createElement("option");
+  purposeOptionOne.setAttribute("name", "vacation");
   purposeOptionOne.innerText = "VACATION";
+
   let purposeOptionTWO = document.createElement("option");
   purposeOptionTWO.innerText = "BUSINESS";
+  purposeOptionTWO.setAttribute("name", "business");
   purposeSelect.append(purposeOptionOne, purposeOptionTWO);
   purposeLabel.append(purposeSelect);
 
@@ -264,8 +344,12 @@ function createImigrationForm() {
 
   let PreAcceptBtn = document.createElement("button");
   PreAcceptBtn.setAttribute("class", "prebtn");
-  PreAcceptBtn.setAttribute("type", "submit");
+
   PreAcceptBtn.innerText = "Accept ->";
+
+  let rejectBtn = document.createElement("button");
+  rejectBtn.setAttribute("class", "rejectbtn");
+  rejectBtn.innerText = "Reject ->";
 
   formEl.append(
     destinationLabel,
@@ -273,15 +357,77 @@ function createImigrationForm() {
     activityLabel,
     confirmYesDiv,
     confirmNoDiv,
-    PreAcceptBtn
+    PreAcceptBtn,
+    rejectBtn
   );
+  rejectBtn.addEventListener("click", function (eve) {
+    eve.preventDefault();
+    getDataforRejecte(formEl, applicant);
+    render();
+    spanName.innerText = "";
+    formEl.reset();
+  });
+  if (yesInput.checked === false && noInput.checked === false) {
+    PreAcceptBtn.disabled = true;
+    rejectBtn.disabled = true;
+    rejectBtn.className = "disablebtn";
+  }
+
+  yesInput.addEventListener("click", function () {
+    PreAcceptBtn.disabled = false;
+    rejectBtn.disabled = false;
+    rejectBtn.className = "rejectbtn";
+  });
+  noInput.addEventListener("click", function () {
+    PreAcceptBtn.disabled = false;
+    rejectBtn.disabled = false;
+    rejectBtn.className = "rejectbtn";
+  });
+
   PreAcceptBtn.addEventListener("click", function (eve) {
-    // eve.preventDefault();
-    if (yesInput.checked) {
-    }
+    eve.preventDefault();
+    PreAcceptBtn.className = "prebtn";
+    getDataforAppoved(formEl, applicant);
+    render();
+    spanName.innerText = "";
+    formEl.reset();
   });
 
   sectionEl.append(titelH, nameH, formEl);
   actionSection.append(sectionEl);
 }
-createImigrationForm();
+createImigrationForm(applicant);
+
+function getDataforAppoved(form, applicant) {
+  let spantext = document.querySelector(".autoFill");
+  let approvedApplicant = spantext.innerText;
+  state.applicants = state.applicants.filter(function (applicant) {
+    return applicant.name !== approvedApplicant;
+  });
+
+  let approvedApplicantInfo = {
+    Destination: form.destination.value,
+    Purpose: form.purpose.value,
+    GoodCitizen: true,
+    ...applicant,
+  };
+  state.approvedApplicants.push(approvedApplicantInfo);
+  console.log(state);
+}
+
+function getDataforRejecte(form, applicant) {
+  let spantext = document.querySelector(".autoFill");
+  let rejectApplicant = spantext.innerText;
+  state.applicants = state.applicants.filter(function (applicant) {
+    return applicant.name !== rejectApplicant;
+  });
+
+  let rejectApplicantInfo = {
+    Destination: form.destination.value,
+    Purpose: form.purpose.value,
+    GoodCitizen: false,
+    ...applicant,
+  };
+  state.rejectApplicants.push(rejectApplicantInfo);
+  console.log(state);
+}

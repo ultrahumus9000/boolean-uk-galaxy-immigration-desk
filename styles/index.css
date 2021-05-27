@@ -5,7 +5,7 @@
   gap: 4px;
   overflow: scroll;
 }
-.list-section li {
+.applicantlist {
   list-style: none;
   display: grid;
   grid-template-columns: 6fr 1fr;
@@ -15,11 +15,16 @@
   background-color: cornsilk;
 }
 
+.action-section {
+  overflow: scroll;
+}
+
 .action-section section {
   display: grid;
-  margin: 0px 200px 0px 200px;
+  margin: 0px 100px 20px 100px;
   gap: 10px;
 }
+
 .nameH {
   padding: 10px;
   background-color: rgb(247, 246, 244);
@@ -50,12 +55,16 @@ form div label {
 }
 
 .greenbig {
-  background-color: rgb(21, 81, 82);
+  background-color: rgb(19, 92, 92);
   color: aliceblue;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
 }
 .info-section {
   display: grid;
-  padding: 100px 650px 100px 650px;
+  padding: 30px 500px 30px 500px;
+  overflow: scroll;
 }
 
 .viewcard {
@@ -79,4 +88,41 @@ form div label {
 
 .autoFill {
   text-align: right;
+}
+.rejectbtn {
+  background-color: red;
+  color: aliceblue;
+}
+
+.rejectbtn:active {
+  background-color: rosybrown;
+}
+.disablebtn {
+  background-color: rgb(226, 190, 190);
+}
+.approvedapplicantlist {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+  border: 2px solid black;
+  align-items: center;
+  padding: 5px;
+  background-color: aquamarine;
+}
+.rejectapplicantlist {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+  border: 2px solid black;
+  align-items: center;
+  padding: 5px;
+  background-color: coral;
+}
+
+.rejecbigbutton {
+  background-color: red;
+  color: aliceblue;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
 }
